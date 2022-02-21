@@ -39,7 +39,7 @@ def sudo(client, message,redis):
 		if text :
 			redis.sadd("{}Nbot:{}:TXPoeders".format(BOT_ID,chatID),f"{tx}={text}")
 			redis.hdel("{}Nbot:stepSUDO:or".format(BOT_ID),userID)
-			Bot("sendMessage",{"chat_id":chatID,"text":f"✅꒐ تم اضافه الامر {tx} الى {text}","reply_to_message_id":message.message_id,"parse_mode":"html"})
+			Bot("sendMessage",{"chat_id":chatID,"text":f"-꒐ تم اضافه الامر {tx} الى {text}","reply_to_message_id":message.message_id,"parse_mode":"html"})
 
 
 	if redis.hexists("{}Nbot:stepSUDO".format(BOT_ID),userID):
@@ -86,13 +86,13 @@ def sudo(client, message,redis):
 		if rank == "sudo":
 			if text == "وضع مجموعه المطور":
 				redis.set("{}Nbot:sudogp".format(BOT_ID),chatID)
-				Bot("sendMessage",{"chat_id":chatID,"text":f"✅꒐ تم تحديد المجموعه لاستلام الاشعارات \n{title} {chatID}","reply_to_message_id":message.message_id,"parse_mode":"html"})
+				Bot("sendMessage",{"chat_id":chatID,"text":f"-꒐ تم تحديد المجموعه لاستلام الاشعارات \n{title} {chatID}","reply_to_message_id":message.message_id,"parse_mode":"html"})
 		if re.search("^اضف امر عام (.*)$",text):
 			cc = re.findall("^اضف امر عام (.*)$",text)
 			redis.hset("{}Nbot:stepSUDO:or".format(BOT_ID),userID,cc[0])
-			message.reply_text(f"⏺꒐ الان ارسل الامر ليتم تغيره الى {cc[0]}")
+			message.reply_text(f"- الان ارسل الامر ليتم تغيره الى {cc[0]}")
 		if re.search("^الاوامر العامه$",text):
-			tx = "الاوامر العامه ℹ️:\n"
+			tx = "الاوامر العامه -:\n"
 			x = redis.smembers("{}Nbot:{}:TXPoeders".format(BOT_ID,chatID))
 			if not x :
 				message.reply_text(r.listempty2)
@@ -112,9 +112,9 @@ def sudo(client, message,redis):
 				x = x1.split("=")
 				if x[0] == cc:
 					redis.srem("{}Nbot:{}:TXPoeders".format(BOT_ID,chatID),x1)
-					message.reply_text(f"✅꒐ تم حذف الامر {cc} من الاوامر العامه")
+					message.reply_text(f"-꒐ تم حذف الامر {cc} من الاوامر العامه")
 					return 0
-			message.reply_text(f"⚠️꒐ لا يوجد {cc} امر")
+			message.reply_text(f"-꒐ لا يوجد {cc} امر")
 		if re.search(c.leaveChatS, text) and redis.get("{}Nbot:leaveaddbot".format(BOT_ID)) :
 			Bot("leaveChat",{"chat_id":chatID})
 			redis.srem("{}Nbot:groups".format(BOT_ID),chatID)
@@ -200,15 +200,15 @@ def sudo(client, message,redis):
 				
 
 
-			if re.search("^رفع نسخه احتياطيه$|^رفع نسخة احتياطية$", text):
-				msgID = Bot("sendMessage",{"chat_id":chatID,"text":"انتظر قليلاً يتم تحميل الملف ℹ️","reply_to_message_id":message.message_id,"parse_mode":"html","disable_web_page_preview":True})["result"]["message_id"]
+			if re.search("^/up$|^رفع نسخة احتياطية$", text):
+				msgID = Bot("sendMessage",{"chat_id":chatID,"text":"انتظر قليلاً يتم تحميل الملف -","reply_to_message_id":message.message_id,"parse_mode":"html","disable_web_page_preview":True})["result"]["message_id"]
 				fileName = message.reply_to_message.download()
 				JsonDate = json.load(open(fileName))
 				if int(JsonDate["BOT_ID"]) != int(BOT_ID):
-					Bot("editMessageText",{"chat_id":chatID,"text":"عذراً هذه الملف ليس لي ⚠️","message_id":msgID,"disable_web_page_preview":True,"parse_mode":"html"})
+					Bot("editMessageText",{"chat_id":chatID,"text":"عذراً هذه الملف ليس لي -","message_id":msgID,"disable_web_page_preview":True,"parse_mode":"html"})
 					return 0
 				co = len(JsonDate["group"])
-				Bot("editMessageText",{"chat_id":chatID,"text":f"تم ايجاد {co} مجموعه في الملف ℹ️","message_id":msgID,"disable_web_page_preview":True,"parse_mode":"html"})
+				Bot("editMessageText",{"chat_id":chatID,"text":f"تم ايجاد {co} مجموعه في الملف -","message_id":msgID,"disable_web_page_preview":True,"parse_mode":"html"})
 				for chatid in JsonDate["group"].keys():
 					redis.sadd("{}Nbot:groups".format(BOT_ID),chatid)
 					for rk in JsonDate["group"][chatid].keys():
@@ -217,10 +217,10 @@ def sudo(client, message,redis):
 						else:
 							for userId in JsonDate["group"][chatid][rk]:
 								setrank(redis,rk,userId,chatid,"array")
-				Bot("editMessageText",{"chat_id":chatID,"text":f"تم رفع المجموعات ✅","message_id":msgID,"disable_web_page_preview":True,"parse_mode":"html"})
+				Bot("editMessageText",{"chat_id":chatID,"text":f"تم رفع المجموعات -","message_id":msgID,"disable_web_page_preview":True,"parse_mode":"html"})
 
 
-			if re.search("^جلب نسخه احتياطيه$|^جلب نسخة احتياطية$", text):
+			if re.search("^/get$|^جلب نسخة احتياطية$", text):
 				JsonSave = defaultdict(list)
 				JsonSave["BOT_ID"] = BOT_ID
 				JsonSave["group"] = {}
@@ -243,10 +243,10 @@ def sudo(client, message,redis):
 				with open(f'{userID}.json', 'w') as fp:
 					json.dump(JsonSave, fp)
 				da = datetime.datetime.now().strftime("%Y-%m-%d")
-				message.reply_document(f'{userID}.json',caption=f"عدد المجموعات 💬 : {len(gps)}\nتاريخ النسخه 📆 : {da}\n⎯ ⎯ ⎯ ⎯")
+				message.reply_document(f'{userID}.json',caption=f"عدد المجموعات 💬 : {len(gps)}\nتاريخ النسخه 📆 : {da}\n — — — — —")
 			if text == "حذف مجموعه المطور":
 				redis.delete("{}Nbot:sudogp".format(BOT_ID))
-				Bot("sendMessage",{"chat_id":chatID,"text":f"✅꒐ تم تحويل الاشعارات الى الخاص","reply_to_message_id":message.message_id,"parse_mode":"html"})
+				Bot("sendMessage",{"chat_id":chatID,"text":f"-꒐ تم تحويل الاشعارات الى الخاص","reply_to_message_id":message.message_id,"parse_mode":"html"})
 
 			if re.search("^تحويل الاساسي$|^تحويل الاساسي @(.*)$|^تحويل الاساسي [0-9]+$", text):
 				if re.search("@",text):
@@ -264,7 +264,7 @@ def sudo(client, message,redis):
 					date = open("./config.py").read().replace(f"SUDO = {userID}", f"SUDO = {userId}")
 					print(date)
 					open("./config.py","w+").write(date)
-					Bot("sendMessage",{"chat_id":chatID,"text":f"✅꒐ تم تحويل المطور الاساسي الى {userFn} {userId}","reply_to_message_id":message.message_id,"parse_mode":"html"})
+					Bot("sendMessage",{"chat_id":chatID,"text":f"-꒐ تم تحويل المطور الاساسي الى {userFn} {userId}","reply_to_message_id":message.message_id,"parse_mode":"html"})
 				except Exception as e:
 					print(e)
 					Bot("sendMessage",{"chat_id":chatID,"text":r.userNocc,"reply_to_message_id":message.message_id,"parse_mode":"html"})
@@ -339,7 +339,7 @@ def sudo(client, message,redis):
 				Bot("sendMessage",{"chat_id":chatID,"text":r.Files,"reply_to_message_id":message.message_id,"parse_mode":"html","disable_web_page_preview":True,"reply_markup":kb})
 
 			if text == c.ADDfiles:
-				url = "https://raw.githubusercontent.com/VeerCli/VeerV2-files/master/files"
+				url = "https://raw.githubusercontent.com/EOROTEAM/EOROV2-files/main/files"
 				req = requests.get(url).text
 				if not re.search(".py",req):
 					Bot("sendMessage",{"chat_id":chatID,"text":r.NOaddfiles,"reply_to_message_id":message.message_id,"disable_web_page_preview":True,"parse_mode":"html"})
@@ -360,25 +360,25 @@ def sudo(client, message,redis):
 				Files_U = ["tg.py","locks.py","rank.py","send.py"]
 				Files_B = ["bot.py","setup.py"]
 				for fnh in Files_H:
-					url = "https://raw.githubusercontent.com/VeerCli/VeerV2/master/handlers/"+fnh
+					url = "https://raw.githubusercontent.com/EOROTEAM/EOROV2/main/handlers/"+fnh
 					out = requests.get(url).text
 					f = open("./handlers/"+fnh,"w+")
 					f.write(out)
 					f.close()
 				for fnu in Files_U:
-					url = "https://raw.githubusercontent.com/VeerCli/VeerV2/master/utlis/"+fnu
+					url = "https://raw.githubusercontent.com/EOROTEAM/EOROV2/main/utlis/"+fnu
 					out = requests.get(url).text
 					f = open("./utlis/"+fnu,"w+")
 					f.write(out)
 					f.close()
 				for fnb in Files_B:
-					url = "https://raw.githubusercontent.com/VeerCli/VeerV2/master/"+fnb
+					url = "https://raw.githubusercontent.com/EOROTEAM/EOROV2/main/"+fnb
 					out = requests.get(url).text
 					f = open("./"+fnb,"w+")
 					f.write(out)
 					f.close()
 				for fnu in Files_L:
-					url = "https://raw.githubusercontent.com/VeerCli/VeerV2/master/lang/"+fnu
+					url = "https://raw.githubusercontent.com/EOROTEAM/EOROV2/main/lang/"+fnu
 					out = requests.get(url).text
 					f = open("./lang/"+fnu,"w+")
 					f.write(out)
