@@ -169,7 +169,7 @@ def updateCallback(client, callback_query,redis):
     if date[0] == "dlf":
       File = date[1]
       os.system("rm ./files/"+File)
-      url = "https://raw.githubusercontent.com/VeerCli/VeerV2-files/master/"+File
+      url = "https://raw.githubusercontent.com/EOROTEAM/EOROV2-files/main/"+File
       out = requests.get(url).text
       f = open("./files/"+File,"w+")
       f.write(out)
