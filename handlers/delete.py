@@ -22,12 +22,12 @@ def delete(client, message,redis):
   c = importlib.import_module("lang.arcmd")
   r = importlib.import_module("lang.arreply")
   if redis.sismember("{}Nbot:restricteds".format(BOT_ID),userID):
-    Bot("restrictChatMember",{"chat_id": chatID,"user_id": userId,"can_send_messages": 0,"can_send_media_messages": 0,"can_send_other_messages": 0,
-            "can_send_polls": 0,"can_change_info": 0,"can_add_web_page_previews": 0,"can_pin_messages": 0,"can_invite_users": 0,})
+    Bot("deleteMessage",{"chat_id":chatID,"message_id":message.message_id})
   if redis.sismember("{}Nbot:bans".format(BOT_ID),userID):
     Bot("kickChatMember",{"chat_id":chatID,"user_id":userID})
   if redis.sismember(f"{BOT_ID}Nbot:{chatID}:muteusers",userID) and (rank is False or rank is 0):
     message.delete()
+
   if text :
     if text == c.kickme and not redis.sismember("{}Nbot:kickme".format(BOT_ID),chatID):
       GetGprank = GPranks(userID,chatID)
@@ -236,7 +236,3 @@ def delete(client, message,redis):
 - تم طرده لتجاوز عدد الرسائل المحدده {} في الوقت المحدد {}""".format(BY,Max_msg,Time_ck),"parse_mode":"html"})
 
     redis.setex("{}Nbot:{}:{}:flood".format(BOT_ID,chatID,userID), Time_ck, User_msg+1)
-
-  if re.findall("[Hh][Tt][Tt][Pp][Ss]:/|[Hh][Tt][Tt][Pp]://|.[Ii][Rr]|.[Cc][Oo][Mm]|.[Oo][Rr][Gg]|.[Ii][Nn][Ff][Oo]|[Ww][Ww][Ww]|.[Tt][Kk]|.[Mm][Ee]", text) or re.findall('@', text) or re.findall('#', text) or re.findall("[a-zA-Z0-9$@$!%*?&#^-_. +]+", text) or message.via_bot or message.reply_markup or message.sticker or message.animation or message.audio or message.voice or message.video or message.document or message.photo or message.contact or message.forward_date or message.video_note:
-    if redis.sismember("{}Nbot:Lall".format(BOT_ID),chatID):#20
-      Bot("deleteMessage",{"chat_id":chatID,"message_id":message.message_id})
