@@ -8,7 +8,6 @@ from pyrogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyb
 def Bot(method,data):
   url = "https://api.telegram.org/bot{}/{}".format(TOKEN,method)
   post = requests.post(url,data=data)
-  #print(post.json())
   return post.json()
 
 
@@ -75,9 +74,8 @@ def Ckuser(message):
   if response["ok"] == False:
     return True
   if response["result"] != None and response["result"]["status"] == "left":
-    kb = InlineKeyboardMarkup([[InlineKeyboardButton("اضغط للاشتراك ⏺", url="t.me/"+BOTATE)] ])
+    kb = InlineKeyboardMarkup([[InlineKeyboardButton(".•♫•♬•ᴊᴏᴇɴ•♬•♫•.", url="t.me/"+BOTATE)] ])
     Bot("sendMessage",{"chat_id":chatID,"text":'عذراً يجب عليك الاشتراك في <a href="t.me/'+BOTATE+'">قناة البوت</a>\nليمكنك استخدام البوت بشكل كامل',"reply_to_message_id":message.message_id,"parse_mode":"html","disable_web_page_preview":True,"reply_markup":kb})
     return False
   else:
     return True
-  
